@@ -1,0 +1,126 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Ultimate Scoreboard</title>
+<meta name="description" content="Scoreboard app specifically for ultimate frisbee">
+<meta name="author" content="Gregory Pike">
+<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<!-- Place favicon.ico and apple-touch-icon.png in the root of your domain and delete these references -->
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!--[if IE]><![endif]--><!-- Used to speed CSS loading -->
+<link rel="stylesheet" href="reset.css">
+<link rel="stylesheet" href="styles.css?v=1.0">
+<link rel="stylesheet" href="bootstrap.min.css?v=1.0">
+    
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- BEGIN CONTENT - EDIT HERE -->
+
+<div class="navbar">
+<div class="navbar-inner">
+<div class="container">
+
+<a class="brand" href="#">Ultimate Scoreboard</a>
+
+<ul class="nav pull-right">
+    <li class="pull-right"><a href="#new-game">
+        <i class="icon-plus-sign icon-white"></i>
+        New Game
+    </a></li>
+    <li class="pull-right"><a href="#game-settings">
+        <i class="icon-cog icon-white"></i>
+        Game Settings
+    </a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<!-- End Nav -->
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+    <div class="row-fluid displayed-scores">
+
+    <div class="span6 text-align-right">
+        <div class="team-score">
+            <h1 class="our-name data-us text-align-center">Us</h1>
+            <div class="displayed-score data-usScore text-align-center">0</div>
+        </div>
+    </div>
+
+    <div class="span6 text-align-left">
+        <div class="team-score">
+            <h1 class="their-name data-them text-align-center">Them</h1>
+            <div class="displayed-score data-themScore text-align-center">0</div>
+        </div>
+    </div>
+
+    </div>
+
+</div>
+</div>
+
+<!-- Modals -->
+
+<div class="modal hide" id="game-settings-modal">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3>Game Settings</h3>
+    </div>
+<div class="modal-body">
+    
+    <form class="well">
+
+        <label>Our Team Name</label>
+        <input type="text" class="settings-us span3" placeholder="Us">
+
+        <label>Their Team Name</label>
+        <input type="text" class="settings-them span3" placeholder="Them">
+
+        <label>Our Current Score</label>
+        <input type="text" class="settings-usScore span1" placeholder="0">
+
+        <label>Their Current Score</label>
+        <input type="text" class="settings-themScore span1" placeholder="0">
+
+        <label>Time Cap</label>
+        <input type="text" class="settings-timeCap span1" placeholder="0">
+    </form>
+
+</div>
+<div class="modal-footer">
+    <a href="#cancel" class="btn" data-dismiss="modal">Cancel</a>
+    <a href="#continue" class="btn btn-primary">Continue</a>
+</div>
+</div>
+
+<!-- END CONTENT - STOP EDITING -->
+
+    
+<!-- JAVASCRIPT -->
+
+<!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>if (typeof jQuery == "undefined") document.write(unescape('%3Cscript src="js/jquery-1.7.1.min.js" type="text/javascript"%3E%3C/script%3E'));</script>
+
+<script src="js/bootstrap.min.js"></script>
+<script src="https://raw.github.com/davatron5000/FitText.js/master/jquery.fittext.js"></script>
+<script src="js/scoreboard.js"></script>
+
+<!-- asynchronous google analytics
+change the UA-XXXXX-X to be your site's ID -->
+<script>
+ var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
+ (function(d, t) {
+  var g = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+  g.async = true;
+  g.src = '//www.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g, s);
+ })(document, 'script');
+</script>

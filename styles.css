@@ -1,0 +1,47 @@
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.displayed-scores {
+	text-align: center;
+}
+
+.our-name, .their-name {
+	width: 60%;
+	margin: 10px auto;
+}
+
+.team-score {
+	width: 60%;
+	margin: 10px auto;
+}
+
+.displayed-score {
+	border: 1px solid red;
+	font-weight: 800;
+	-webkit-transform-origin: 0% 100%;
+	-moz-transform-origin: 0% 100%;
+	-o-transform-origin: 0% 100%;
+	transform-origin: 0% 100%;
+	white-space: nowrap;
+}
+
+.text-align-right {
+	text-align: right;
+}
+
+.text-align-left {
+	text-align: left;
+}
+
+.text-align-center {
+	text-align: center;
+}
+
+.hide {
+	display: none;
+}
