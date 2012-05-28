@@ -18,34 +18,30 @@ ultimateScoreboard.Get = function (key) {
 };
 
 ultimateScoreboard.Set = function (key, value) {
+	// Update the script variable with the new value
 	this.Settings[key] = value;
+	// Store the new value in Local Storage
+	this.Storage.Add(key,value);
+	// Update the data in the view
 	this.DisplayData(key);
 };
 
 ultimateScoreboard.NewGame = function() {
 
-	//$('#new-game-modal').modal();
-
-	console.log('this.Defaults',this.Defaults);
 	this.Settings = jQuery.extend({}, this.Defaults);
 
-	console.log('settings', this.Settings);
+	this.Storage.Empty();
+
+	this.LoadGame();
+
+};
+
+ultimateScoreboard.LoadGame = function() {
 
 	for(var i in this.Settings)
 	{
 		this.DisplayData(i);
-		//console.log('Adding local var '+i+' as '+this.Settings[i]);
-		//this.Storage.Add("ultimateScoreboard."+i, this.Settings[i]);
 	}
-
-	//this.Set('them',this.Storage.Get('them'));
-	//this.Set('us',this.Storage.Get('us'));
-
-	//console.log(this.Get('us'));
-
-	//this.Set('us','Mutiny');
-
-	console.log(this.Get('us'));
 
 };
 
@@ -58,12 +54,7 @@ ultimateScoreboard.IncrementScore = function (team) {
 	var score = this.Get(team+'Score');
 	var $this = this;
 
-	$('.data-'+team+'Score').slideUp(function(){
-		$this.Set(team+'Score',parseInt(score + 1));
-		$('.data-'+team+'Score').slideDown();
-	});
-
-
+	$this.Set(team+'Score',parseInt(score + 1));
 };
 
 ultimateScoreboard.DecrementScore = function (team) {
@@ -74,13 +65,17 @@ ultimateScoreboard.DecrementScore = function (team) {
 
 	var score = this.Get(team+'Score');
 
-	this.Set(team+'Score',parseInt(score - 1));
+	// Only decrement the score if it is positive
+	if (score > 0)
+		this.Set(team+'Score',parseInt(score - 1));
 
 };
 
-ultimateScoreboard.DisplayData = function (key) {
-	var data = this.Get(key);
-	console.log('Displaying text for '+key+' = '+data);
+ultimateScoreboard.DisplayData = function (key,data) {
+	
+	if (!data)
+		data = this.Get(key);
+
 	$('.data-'+key).text(data);
 };
 
@@ -97,7 +92,6 @@ ultimateScoreboard.Storage = {
     	if (!ultimateScoreboard.Storage.isSupported()) {
     		return false;
     	}
-    	console.log('Adding '+ultimateScoreboard.Storage.prefix+key+' as '+value);
 
         try {
                 localStorage.setItem(ultimateScoreboard.Storage.prefix+key, value);
@@ -112,8 +106,6 @@ ultimateScoreboard.Storage = {
     		return false;
     	}
 
-    	console.log('Getting value for '+ ultimateScoreboard.Storage.prefix+key);
-
         return localStorage.getItem(ultimateScoreboard.Storage.prefix+key);
         //or localStorage[key];
     },
@@ -121,7 +113,6 @@ ultimateScoreboard.Storage = {
     	if (!ultimateScoreboard.Storage.isSupported()) {
     		return false;
     	}
-
     	return localStorage.removeItem(key);
     },
     // Remove all data
@@ -130,26 +121,28 @@ ultimateScoreboard.Storage = {
     		return false;
     	}
 
-    	var defaults = this.Defaults;
+    	var defaults = ultimateScoreboard.Defaults;
 
     	for (var i in defaults) {
-			this.Storage.Remove(ultimateScoreboard.Storage.prefix+i);
+			ultimateScoreboard.Storage.Remove(ultimateScoreboard.Storage.prefix+i);
 		}
     },
 };
 
 ultimateScoreboard.Init = function() {
 
-	//this.Storage.Add("Defaults.us","Get At Me Wolf");
-
 	// Set the defaults if set by the user
 	var defaults = this.Defaults;
+	var settings = this.Settings;
 
 	for (var i in defaults) {
 		//defaults[i] = this.Storage.Get(i);
 		if (this.Storage.Get("Defaults."+i)) {
 			defaults[i] = this.Storage.Get("Defaults."+i);
-			console.log('this.Defaults.'+i+' = '+defaults[i]);
+		}
+
+		if (this.Storage.Get(i)) {
+			settings[i] = this.Storage.Get(i);
 		}
 	}
 
@@ -157,29 +150,17 @@ ultimateScoreboard.Init = function() {
 
 	ultimateScoreboard.ScoreBoxSize = $('.displayed-score').width();
 
-	this.NewGame();
+	this.Settings = jQuery.extend({}, this.Defaults, this.Settings);
+
+	this.LoadGame();
 
 };
 
-ultimateScoreboard.DrawScoreboard = function() {
-// console.log('Height: '+$(document).height());
-// 	var scoreboardHeight = $(document).height() * 0.6;
-// console.log('NewHeight: '+scoreboardHeight);
-// 	$('.displayed-score').height(scoreboardHeight);
-
-}
-
 ultimateScoreboard.Bind = function() {
-	// $(window).resize(function() {
-	// 	ultimateScoreboard.DrawScoreboard();
-	// });
 
 	$this = this;
 
-	$(".displayed-score").fitText(0.2);
-
-	//console.log('Draw '+$(document).width());
-	//ultimateScoreboard.DrawScoreboard();
+	$('.displayed-score').fitText(0.2);
 
 	$('a[href=#new-game]').click(function(){
 		$this.NewGame();
@@ -200,9 +181,93 @@ ultimateScoreboard.Bind = function() {
 				$this.Set(i,$('#game-settings-modal .settings-'+i).val());
 			}
 
-			$('#game-settings-modal').modal('hide')
+			$('#game-settings-modal').modal('hide');
 
 			return false;
+		});
+
+		return false;
+	});
+
+	$('.action-increment-score').click(function(){
+		
+		var team = $(this).parents('.team-score').attr('data-team');
+		if (!team)
+			return false;
+		
+		$this.IncrementScore(team);
+		return false;
+	});
+
+	$('.action-decrement-score').click(function(){
+		
+		var team = $(this).parents('.team-score').attr('data-team');
+		if (!team)
+			return false;
+		
+		$this.DecrementScore(team);
+		return false;
+	});
+
+	$('.our-name, .their-name').unbind('click').bind('click',function(){
+		
+		$('#team-name-modal a[href=#update]:visible').hide();
+
+		var clicked_team = 'us';
+		if ($(this).hasClass('their-name'))
+			clicked_team = 'them';
+
+		if (clicked_team == 'us')
+		{
+			$('#team-name-modal label').text('Our team name');
+			$('#team-name-modal .add-on i').removeClass('icon-plane').addClass('icon-home');
+		}
+
+		if (clicked_team == 'them')
+		{
+			$('#team-name-modal label').text('Their team name');
+			$('#team-name-modal .add-on i').removeClass('icon-home').addClass('icon-plane');
+		}
+
+		$('#team-name-modal .update-team').val('').focus();
+
+		$('#team-name-modal').modal().css(
+			{
+				'margin-top': function () {
+				return -($(this).height() / 2);
+			}
+		});
+
+		var _update_name = function() {
+			
+			var new_name = $('#team-name-modal .update-team').val();
+			
+			if (!new_name)
+				return false;
+
+			$this.Set(clicked_team,new_name);
+
+			$('#team-name-modal').modal('hide');
+			//$('#team-name-modal .update-team').val('');
+			return false;
+		};
+
+		$('#team-name-modal a[href=#update]').unbind('click').bind('click',function(){
+			return _update_name();
+		});
+
+		$('#team-name-modal .update-team').unbind('keyup.updateteam').bind('keyup.updateteam',function(e){
+
+			if ($(this).val() != '')
+				$('#team-name-modal a[href=#update]:hidden').fadeIn('slow');
+
+			if ($(this).val() == '')
+				$('#team-name-modal a[href=#update]:visible').fadeOut('fast');
+
+			var code = (e.keyCode ? e.keyCode : e.which);
+			// Check to see if the user hits ENTER
+			if (code == 13)
+				_update_name();
 		});
 
 		return false;

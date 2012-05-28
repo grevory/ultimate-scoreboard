@@ -1,3 +1,8 @@
+body {
+	background: url('img/field1.jpg');
+	background-size: 100%;
+}
+
 a {
 	text-decoration: none;
 }
@@ -6,6 +11,7 @@ a:hover {
 	text-decoration: underline;
 }
 
+
 .displayed-scores {
 	text-align: center;
 }
@@ -13,15 +19,35 @@ a:hover {
 .our-name, .their-name {
 	width: 60%;
 	margin: 10px auto;
+	cursor: pointer;
 }
 
 .team-score {
-	width: 60%;
-	margin: 10px auto;
+	width: 50%;
+	float: left;
+}
+
+.scoreboard-back {
+	background: #333;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 0);
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 0, 0.9);
+	filtesr:alpha(opacity=90); /* For IE8 and earlier */
+	margin: 0 5% 5% 5%;
+	color: #fff;
+}
+
+.round {
+	-webkit-border-radius: 10%;
+	-moz-border-radius: 10%;
+	border-radius: 10%;
 }
 
 .displayed-score {
-	border: 1px solid red;
+	width: 80%;
+	margin: 0 auto;
+	background: #000;
 	font-weight: 800;
 	-webkit-transform-origin: 0% 100%;
 	-moz-transform-origin: 0% 100%;
@@ -29,6 +55,34 @@ a:hover {
 	transform-origin: 0% 100%;
 	white-space: nowrap;
 }
+
+.score-actions {
+	text-align: center;
+}
+
+.score-actions button {
+	padding: 0.5em;
+	margin: 1.5em 0;
+	border: 0;
+	color: #fff;
+}
+
+.score-actions .goal {
+	background: #2DC425;
+	font-weight: bold;
+}
+
+.score-actions .fix {
+	background: none;
+}
+
+#team-name-modal input {
+	display: inline-block;
+}
+
+/*.modal-open .team-name-modal-override {
+	width: 30%;
+}*/
 
 .text-align-right {
 	text-align: right;
